@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // 位置情報マネージャ取得
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+
         // 位置情報のパーミッション確認と要求
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
