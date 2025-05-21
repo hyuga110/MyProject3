@@ -11,12 +11,18 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.Gravity;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
+import jp.ac.gifu_u.info.onishi.myapplication.CameraView;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
 
@@ -29,17 +35,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TextViewを動的に生成して配置
-        textView = new TextView(this);
-        textView.setText("センサ情報待機中...");
-        setContentView(textView);
+        // 画面にレイアウトを設定（括弧修正）
+        setContentView(R.layout.activity_main);
 
-        // センサマネージャ取得
+        // TextViewの取得
+        textView = findViewById(R.id.status_text);
+
+        // センサ・位置情報マネージャの取得
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        // 位置情報マネージャ取得
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
 
         // 位置情報のパーミッション確認と要求
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -50,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     1);
         }
     }
+
+
 
     @Override
     protected void onResume() {
@@ -107,6 +113,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         double lat = location.getLatitude();
         double lon = location.getLongitude();
         Toast.makeText(this, "位置: 緯度=" + lat + " 経度=" + lon, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showCamera() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 100);
+            return;
+        }
+
+        CameraView camView = new CameraView(this);
+        setContentView(camView);  // これにより既存のUIは消える点に注意
     }
 
     // その他の LocationListener メソッド
